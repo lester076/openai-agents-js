@@ -24,13 +24,17 @@ const hasReasoningModelSettings = (settings?: ModelSettings): boolean => {
 };
 
 /**
- * Resolves the effective model for the next turn by giving precedence to the agent-specific
- * configuration when present, otherwise falling back to the runner-level default.
+ * Resolves the effective model for the next turn by giving precedence to an explicitly
+ * configured run-level model, otherwise falling back to the agent's own model. This matches
+ * Python's `RunConfig.model` precedence (#2707).
  */
 export function selectModel(
   agentModel: string | Model,
   runConfigModel: string | Model | undefined,
 ): string | Model {
+  if (runConfigModel) {
+    return runConfigModel;
+  }
   if (
     (typeof agentModel === 'string' &&
       agentModel !== Agent.DEFAULT_MODEL_PLACEHOLDER) ||
@@ -38,7 +42,7 @@ export function selectModel(
   ) {
     return agentModel;
   }
-  return runConfigModel ?? agentModel ?? Agent.DEFAULT_MODEL_PLACEHOLDER;
+  return Agent.DEFAULT_MODEL_PLACEHOLDER;
 }
 
 /**

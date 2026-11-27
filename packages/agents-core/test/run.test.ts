@@ -11026,9 +11026,9 @@ describe('Runner.run', () => {
       expect(result).toBe(MODEL_A);
     });
 
-    it("returns the agent's model when it is a non-empty string even when an override is provided", () => {
+    it("returns the override model over the agent's model when both are provided", () => {
       const result = selectModel(MODEL_A, MODEL_B);
-      expect(result).toBe(MODEL_A);
+      expect(result).toBe(MODEL_B);
     });
 
     it("returns the agent's model when it is a Model instance and no override is provided", () => {
@@ -11037,9 +11037,15 @@ describe('Runner.run', () => {
       expect(result).toBe(fakeModel);
     });
 
-    it("returns the agent's model when it is a Model instance even when an override is provided", () => {
+    it('returns the override model name over the agent Model instance', () => {
       const fakeModel = new ScriptedModel();
       const result = selectModel(fakeModel, MODEL_B);
+      expect(result).toBe(MODEL_B);
+    });
+
+    it('returns the override Model instance over the agent model name', () => {
+      const fakeModel = new ScriptedModel();
+      const result = selectModel(MODEL_A, fakeModel);
       expect(result).toBe(fakeModel);
     });
 
